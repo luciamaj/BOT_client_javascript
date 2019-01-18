@@ -1,0 +1,63 @@
+.chatbox {
+    width: 500px;
+    overflow: hidden;
+}
+
+.content-card {
+    overflow-y: auto;
+    max-height: 300px;
+    height: 300px;
+}
+
+.row-content {
+    margin-top: 80px !important;
+}
+
+.col-stuff {
+    margin-top: 90px;
+}
+
+.send {
+    width: 500px;
+}
+
+.btn-operator {
+    margin: 5px !important;
+}
+
+.message-container {
+    margin: 10px !important;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: aquamarine;
+    float: left;
+    clear: both;
+    max-width: 50%;
+}
+
+.message-container-mine {
+    margin: 10px !important;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: lightsalmon;
+    float: right;
+    display: block;
+    clear: both;
+    max-width: 50%;
+}
+
+.login-form {
+    width: 500px;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+.big {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
