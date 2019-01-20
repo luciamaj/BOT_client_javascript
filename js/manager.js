@@ -34,17 +34,16 @@ function loadAnswers() {
         data: '',
         crossDomain: true,
         success: function(data) {
-            console.log(data);
             for (let i = 0; i < data.length; i++) {
                 var longContent = data[i]["content"];
                 var link = data[i]["filename"];
                 var shortContent = longContent.substring(0, 40);
                 shortContent = shortContent + "...";
                 if(link != null) {
-                    $(".list-answers").append("<div class='item'><div class='right floated content'><div class='ui button'>Add keyword</div></div><img class='ui avatar image' src='http://localhost:8000/uploads/" + link  +  "'><div class='content'>" + shortContent  +  "</div></div>");
+                    $(".list-answers").append("<div class='item'><div class='right floated content'><div class='ui button listAns' data-id='" +  data[i]["id"] +  "'>Add keyword</div></div><img class='ui avatar image' src='http://localhost:8000/uploads/" + link  +  "'><div class='content'>" + shortContent  +  "</div></div>");
                 }
                 else{
-                    $(".list-answers").append("<div class='item'><div class='right floated content'><div class='ui button'>Add keyword</div></div><img class='ui avatar image' src='img/placeholder-image.jpg'><div class='content'>" + shortContent  +  "</div></div>");
+                    $(".list-answers").append("<div data-id='" +  data[i]["id"] +  "' class='item'><div class='right floated content'><div class='ui button listAns' data-id='" +  data[i]["id"] +  "'>Add keyword</div></div><img class='ui avatar image' src='img/placeholder-image.jpg'><div class='content'>" + shortContent  +  "</div></div>");
                 }
             }
         },
@@ -62,10 +61,40 @@ $(document).on('click', '.link-to-chat', function (e) {
     window.open('programmer-chat.html', '_blank');
 });
 
+
+$(document).on('click', '.listAns', function (e) {
+    var id= $(this).data('id');
+    bootbox.prompt("Add keywords to " + $(this).data('id'), function(result){ 
+        saveWord(id, result)
+     });
+});
+
+function saveWord (id, word) {
+    var dataToSend = {
+        answer_id: id,
+        word: word
+    }
+
+    $.ajax({
+        url: 'http://localhost:8000/api/keywords',
+        type: 'POST',
+        dataType: 'json',
+        data: dataToSend,
+
+        success: function(data) {
+            console.log(data);
+        },
+        error: function(e) {
+            console.log("error");
+            console.log(e);
+            console.log(dataToSend);
+        }
+    });
+}
+
 $("#sendForm").on('submit',(function(e) {
     e.preventDefault();
     var formData = new FormData(this);
-    
 
     $.ajax({
         url: 'http://localhost:8000/api/answers',

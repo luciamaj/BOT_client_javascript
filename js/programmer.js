@@ -5,7 +5,6 @@ function checkForNewMessages() {
         url: 'http://localhost:8000/api/last-question',
         type: 'POST',
         dataType: 'json',
-        crossDomain: true,
         data: '',
         success: function(data) {
             if (data.content != null && data.created_at != latest && localStorage.token != "vuoto") {
