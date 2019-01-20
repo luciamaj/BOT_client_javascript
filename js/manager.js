@@ -1,3 +1,4 @@
+
 window.onload = function () {
     loadChats();
     loadAnswers();
@@ -9,6 +10,7 @@ function loadChats() {
         type: 'GET',
         dataType: 'json',
         data: '',
+        crossDomain: true,
         success: function(data) {
             console.log(data);
             for (var prop in data) {
@@ -30,6 +32,7 @@ function loadAnswers() {
         type: 'GET',
         dataType: 'json',
         data: '',
+        crossDomain: true,
         success: function(data) {
             console.log(data);
             for (let i = 0; i < data.length; i++) {
@@ -37,7 +40,12 @@ function loadAnswers() {
                 var link = data[i]["filename"];
                 var shortContent = longContent.substring(0, 40);
                 shortContent = shortContent + "...";
-                $(".list-answers").append("<div class='item'><div class='right floated content'><div class='ui button'>Add keyword</div></div><img class='ui avatar image' src='http://localhost:8000/uploads/" + link  +  "'><div class='content'>" + shortContent  +  "</div></div>");
+                if(link != null) {
+                    $(".list-answers").append("<div class='item'><div class='right floated content'><div class='ui button'>Add keyword</div></div><img class='ui avatar image' src='http://localhost:8000/uploads/" + link  +  "'><div class='content'>" + shortContent  +  "</div></div>");
+                }
+                else{
+                    $(".list-answers").append("<div class='item'><div class='right floated content'><div class='ui button'>Add keyword</div></div><img class='ui avatar image' src='img/placeholder-image.jpg'><div class='content'>" + shortContent  +  "</div></div>");
+                }
             }
         },
         error: function() {
@@ -54,7 +62,41 @@ $(document).on('click', '.link-to-chat', function (e) {
     window.open('programmer-chat.html', '_blank');
 });
 
-$(document).on('click', '#addAnswerBtn', function (e) {
+$("#sendForm").on('submit',(function(e) {
     e.preventDefault();
-    console.log("ho cliccato");
-});
+    var formData = new FormData(this);
+    
+
+    $.ajax({
+        url: 'http://localhost:8000/api/answers',
+        type: "POST",
+        enctype: 'multipart/form-data',
+        processData: false,
+        contentType: false,
+        cache: false,
+        data: formData,
+        crossDomain: true,
+        
+        success: function(data) {
+            console.log(data);
+            location.reload(); 
+        },
+        error: function(data) {
+            console.log(data);
+            console.log("error");
+        }
+    });
+}));
+
+function readURL(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            $('#temp-img')
+            .attr('src', e.target.result);
+        };
+
+        reader.readAsDataURL(input.files[0]);
+    }
+}

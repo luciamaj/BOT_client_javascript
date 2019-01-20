@@ -9,6 +9,10 @@
     height: 300px;
 }
 
+.container-stuff {
+    margin-bottom: 100px;
+}
+
 .row-content {
     margin-top: 80px !important;
 }

@@ -16,16 +16,26 @@
     <div class="container">
         <div class="row">
             <div class="col">
-                <div class="container">
+                <div class="container container-stuff">
                     <div class="row">
                         <div class="col col-stuff">
-                            <div class="ui form">
-                                <div class="field">
-                                    <label>Add answers</label>
-                                    <textarea rows="2"></textarea>
-                                </div>
-                                <button id="addAnswerBtn" class="ui button" type="submit">Submit</button>
-                            </div>
+                            <form method="POST" enctype="multipart/form-data" id="sendForm">
+                                <fieldset>
+                                    <input onchange="readURL(this);" class="input-field" type="file" class="form-control"
+                                        name="code" />
+                                    <br>
+                                    <br>
+                                    <label name="description" for="message2" class="mb-0">Descrizione</label>
+                                    <div class="row mb-1">
+                                        <div class="col-lg-12">
+                                            <textarea maxlength="30" rows="6" name="content" id="message2" class="form-control custom-input"
+                                                required=""></textarea>
+                                        </div>
+                                    </div>                        
+                                </fieldset>
+                                <br>
+                                <button type="submit" class="btn btn-secondary btn-lg float-right">Salva la risposta</button>
+                            </form>
                         </div>
                     </div>
                     <div class="row row-content">
