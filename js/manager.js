@@ -40,10 +40,10 @@ function loadAnswers() {
                 var shortContent = longContent.substring(0, 40);
                 shortContent = shortContent + "...";
                 if(link != null) {
-                    $(".list-answers").append("<div class='item'><div class='right floated content'><div class='ui button listAns' data-id='" +  data[i]["id"] +  "'>Add keyword</div></div><img class='ui avatar image' src='http://localhost:8000/uploads/" + link  +  "'><div class='content'>" + shortContent  +  "</div></div>");
+                    $(".list-answers").append("<div class='item'><div class='right floated content'><div class='ui button listAns' data-id='" +  data[i]["id"] +  "'>Add keyword</div><div class='ui button delBtn' data-id='" +  data[i]["id"] +  "'>Delete</div></div><img class='ui avatar image' src='http://localhost:8000/uploads/" + link  +  "'><div class='content'>" + shortContent  +  "</div></div>");
                 }
                 else{
-                    $(".list-answers").append("<div data-id='" +  data[i]["id"] +  "' class='item'><div class='right floated content'><div class='ui button listAns' data-id='" +  data[i]["id"] +  "'>Add keyword</div></div><img class='ui avatar image' src='img/placeholder-image.jpg'><div class='content'>" + shortContent  +  "</div></div>");
+                    $(".list-answers").append("<div class='item'><div class='right floated content'><div class='ui button listAns' data-id='" +  data[i]["id"] +  "'>Add keyword</div><div class='ui button delBtn' data-id='" +  data[i]["id"] +  "'>Delete</div></div><img class='ui avatar image' src='img/placeholder-image.jpg'><div class='content'>" + shortContent  +  "</div></div>");
                 }
             }
         },
@@ -63,11 +63,38 @@ $(document).on('click', '.link-to-chat', function (e) {
 
 
 $(document).on('click', '.listAns', function (e) {
-    var id= $(this).data('id');
+    var id = $(this).data('id');
     bootbox.prompt("Add keywords to " + $(this).data('id'), function(result){ 
         saveWord(id, result)
      });
 });
+
+$(document).on('click', '.delBtn', function (e) {
+    var id = $(this).data('id');
+    bootbox.confirm("Are you sure you want to delete the answer?", function(result){ 
+        confirmDelete(id, result)
+     });
+});
+
+function confirmDelete (id, result) {
+    if(result == true) {
+        $.ajax({
+            url: 'http://localhost:8000/api/answers-delete/' + id,
+            type: 'GET',
+            dataType: 'json',
+            data: '',
+
+            success: function(data) {
+                console.log(data);
+                location.reload();
+            },
+            error: function(e) {
+                console.log("error");
+                console.log(e);
+            }
+        });  
+    }
+}
 
 function saveWord (id, word) {
     var dataToSend = {
