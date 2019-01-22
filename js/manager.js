@@ -107,22 +107,24 @@ function createPopUp(keywords) {
 }
 
 function deleteKeywords(result) {
-    $.ajax({
-        url: 'http://localhost:8000/api/keywords-delete',
-        type: 'POST',
-        dataType: 'json',
-        data: { keywords: result },
+    if(result) {
+        $.ajax({
+            url: 'http://localhost:8000/api/keywords-delete',
+            type: 'POST',
+            dataType: 'json',
+            data: { keywords: result },
 
-        success: function(data) {
-            console.log("SUCCESS");
-            console.log(data);
-            location.reload();
-        },
-        error: function(e) {
-            console.log("error");
-            console.log(e);
-        }
-    });  
+            success: function(data) {
+                console.log("SUCCESS");
+                console.log(data);
+                location.reload();
+            },
+            error: function(e) {
+                console.log("error");
+                console.log(e);
+            }
+        });
+    }  
 }
 
 $(document).on('click', '.delBtn', function (e) {
