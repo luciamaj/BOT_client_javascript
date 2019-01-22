@@ -1,4 +1,3 @@
-
 window.onload = function () {
     loadChats();
     loadAnswers();
@@ -40,10 +39,10 @@ function loadAnswers() {
                 var shortContent = longContent.substring(0, 40);
                 shortContent = shortContent + "...";
                 if(link != null) {
-                    $(".list-answers").append("<div class='item'><div class='right floated content'><div class='ui button listAns' data-id='" +  data[i]["id"] +  "'>Add keyword</div><div class='ui button delBtn' data-id='" +  data[i]["id"] +  "'>Delete</div></div><img class='ui avatar image' src='http://localhost:8000/uploads/" + link  +  "'><div class='content'>" + shortContent  +  "</div></div>");
+                    $(".list-answers").append("<div class='item'><div class='right floated content'><div class='ui button listAns' data-id='" +  data[i]["id"] +  "'>Add word</div><div class='ui button delKeys' data-id='" +  data[i]["id"] +  "'>Delete words</div><div class='ui button delBtn' data-id='" +  data[i]["id"] +  "'>Delete</div></div><img class='ui avatar image' src='http://localhost:8000/uploads/" + link  +  "'><div class='content'>" + shortContent  +  "</div></div>");
                 }
                 else{
-                    $(".list-answers").append("<div class='item'><div class='right floated content'><div class='ui button listAns' data-id='" +  data[i]["id"] +  "'>Add keyword</div><div class='ui button delBtn' data-id='" +  data[i]["id"] +  "'>Delete</div></div><img class='ui avatar image' src='img/placeholder-image.jpg'><div class='content'>" + shortContent  +  "</div></div>");
+                    $(".list-answers").append("<div class='item'><div class='right floated content'><div class='ui button listAns' data-id='" +  data[i]["id"] +  "'>Add word</div><div class='ui button delKeys' data-id='" +  data[i]["id"] +  "'>Delete words</div><div class='ui button delBtn' data-id='" +  data[i]["id"] +  "'>Delete</div></div><img class='ui avatar image' src='img/placeholder-image.jpg'><div class='content'>" + shortContent  +  "</div></div>");
                 }
             }
         },
@@ -65,9 +64,66 @@ $(document).on('click', '.link-to-chat', function (e) {
 $(document).on('click', '.listAns', function (e) {
     var id = $(this).data('id');
     bootbox.prompt("Add keywords to " + $(this).data('id'), function(result){ 
-        saveWord(id, result)
+        if(result != "" && result != null) {
+            saveWord(id, result)
+        }
      });
 });
+
+$(document).on('click', '.delKeys', function (e) {
+    var id = $(this).data('id');
+
+    var keywords = [];
+
+    $.ajax({
+        url: 'http://localhost:8000/api/show-keywords/' + id,
+        type: 'GET',
+        dataType: 'json',
+        data: '',
+        crossDomain: true,
+        success: function(data) {
+            for (let i = 0; i < data.length; i++) {
+                var word = { text: data[i]["word"], value: data[i]["id"] }
+                keywords.push(word);
+            }
+            createPopUp(keywords);
+            console.log(keywords);
+        },
+        error: function() {
+            console.log("error");
+        }
+    });
+});
+
+function createPopUp(keywords) {
+    bootbox.prompt({
+        title: "Words",
+        inputType: 'checkbox',
+        inputOptions: keywords,
+        callback: function (result) {
+            deleteKeywords(result);
+        }
+    });
+}
+
+function deleteKeywords(result) {
+    $.ajax({
+        url: 'http://localhost:8000/api/keywords-delete',
+        type: 'POST',
+        dataType: 'json',
+        data: { keywords: result },
+
+        success: function(data) {
+            console.log("SUCCESS");
+            console.log(data);
+            location.reload();
+        },
+        error: function(e) {
+            console.log("error");
+            console.log(e);
+        }
+    });  
+}
 
 $(document).on('click', '.delBtn', function (e) {
     var id = $(this).data('id');
