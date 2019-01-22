@@ -63,11 +63,32 @@ $(document).on('click', '.link-to-chat', function (e) {
 
 $(document).on('click', '.listAns', function (e) {
     var id = $(this).data('id');
-    bootbox.prompt("Add keywords to " + $(this).data('id'), function(result){ 
-        if(result != "" && result != null) {
-            saveWord(id, result)
+
+    var box = bootbox.dialog({
+        title: "Add keywords",
+        message: "<div class='form-group'><input id='word' type='text' class='form-control input-mod' name='word'></input></div>",
+        buttons: {
+            ok: {
+                label: "Add",
+                className: 'btn-info',
+                callback: function(){
+                    var result = $('#word').val();
+                    if(result != "" && result != null) {
+                        saveWord(id, result)
+                    }
+                }
+            }
         }
-     });
+    }); 
+
+    box.init(function(){
+        $("#word").keypress(function(e){
+            var keyCode = e.which;
+            if (keyCode ==32) { 
+                return false;
+            }
+        });
+    });
 });
 
 $(document).on('click', '.delKeys', function (e) {
